@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			#box{
+				width:400px;
+				height:400px;
+				background: white;
+			}
+			body{
+				background: black;
+			}
+		</style>
+		<script src="js/jquery-3.2.0.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<p>
+			1.svg的基本图形
+				>1.矩形<rect></rect>
+				>2.圆形<circle></circle>
+				>3.椭圆<ellipse></ellipse>
+				>4.直线<line></line>
+				>5.折线<polyline></polyline>
+				>6.多边形<polygon></polygon>
+			2.svg的基本属性
+				fill填充样式
+				stroke描边样式
+				stroke-width描边线宽
+				transform变换
+				path绘制高级图形
+			
+			3.图形参数详解：
+				rect
+					x,y 起始坐标
+					width,height 矩形的宽高
+					rx,ry 矩形的圆角，如果只设置一个值，那么会默认rx=ry,会绘制等半径的圆角
+				
+				circle
+					cx,cy 圆的中心点坐标
+					r 圆的半径
+				
+				ellipse
+					cx,cy 椭圆中心点的坐标
+					rx,ry 椭圆中心点到最右侧的长度，到最下方的长度
+				
+				line
+					x1,y1 起始点坐标
+					x2,y2 结束点坐标
+				
+				polyline
+					x1,y1 起始点坐标
+					x2,y2 第二点坐标
+					... 后续点的坐标
+					属性：points="x1 y1 x2 y2..."
+					用空格或,分割
+					
+				polygon和polyline相同，只不过最后会将起始点和结束点的路径闭合起来，形成多边形
+					
+		</p>
+		<div id="box">
+			<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+				<circle cx="100" cy="100" r="100" style="fill: red;"></circle>
+				<rect x="200" y="200" width="100" height="100" style="fill:green"></rect>
+			</svg>
+		</div>
+		<script type="text/javascript">
+			//在js中创建svg元素，要用下面的方式构建
+//			var svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+//			var box=document.getElementById("box");
+//			box.appendChild(svg);
+		</script>
+	</body>
+</html>

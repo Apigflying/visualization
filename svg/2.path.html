@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			#box{
+				width:400px;
+				height:400px;
+				background: white;
+			}
+			body{
+				background: black;
+			}
+		</style>
+		<script src="js/jquery-3.2.0.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<p>
+			大写的是绝对路径，小写的就是相对路径，小写的意思是相对于原来的位置，累加
+		</p>
+		<div id="box">
+			<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+				<path d="M 10 10 H 90 V 90 h -80 Z"/>
+				<!--
+					<path d="M 10 10 H 90 V 90 H 10 Z"/>
+					这两个是一样的
+				-->
+			</svg>
+		</div>
+		<script type="text/javascript">
+			
+		</script>
+	</body>
+</html>
