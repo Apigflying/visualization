@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<canvas id="canvas" width="500" height="500">jjj</canvas>
+		<div id="ctrl">
+			<input type="button" value="→" />
+			<input type="button" value="↑" />
+			<input type="button" value="↓" />
+			<input type="button" value="←" />
+		</div>
+		<script type="text/javascript">
+			var canvas=document.getElementById("canvas");
+			var ctx=canvas.getContext('2d');
+			
+			var img=new Image();
+			//图片只要设置了src属性，当前的img对象就会立即去加载图片
+			img.src='../../img/逐帧动画.png';
+			//图片在加载完成之后执行的函数
+			img.onload=function (){
+				//drawImage几个参数的说明
+	//drawImage(img,x,y,width,height)
+	//drawImage(img,sx,sy,swidth,sheight,x,y,width,height)
+				//s开头的是在原始图片的位置及宽高
+				//后面的参数是在canvas画布上的绘制的位置及宽高
+				var n=-1;
+				setInterval(function (){
+					n++;
+					n%=4;
+					ctx.clearRect(100,100,165,125);
+					ctx.drawImage(img,82.5*n,62.5*2,82.5,62.5,100,100,165,125)
+				},1000/10)
+				
+			}
+			
+		</script>
+	</body>
+</html>

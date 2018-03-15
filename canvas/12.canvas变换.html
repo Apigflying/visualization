@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<canvas id="canvas" width="500" height="500"></canvas>
+		<script type="text/javascript">
+			var canvas=document.getElementById("canvas");
+			var ctx=canvas.getContext('2d');
+			canvas.style.border='1px solid #000';
+//			ctx.fillStyle='red';
+//			ctx.fillRect(10,10,100,100);
+			/*ctx.save();保存当前环境的状态
+			可以将当前绘制环境进行保存到缓存中
+			ctx.restore();返回之前保存过的路径状态和属性
+			获取最近缓存的ctx
+			一般配合位移画布使用*/
+			
+			//为什么要用save保存呢？
+			
+			
+			/*因为,当用translate,或者rotate或者scale等方法改变了画布的状态,
+			画布的状态被改变后,后面继续绘制的图形,就会依据改变状态后的画布继续操作.
+			需要在下面用restore来还原当前的状态,即画布的原始位置
+			所以,在使用上面的几个方法的时候,要先将当前画布的状态保存起来*/
+			
+			ctx.save();
+			//将上下文的状态保存起来
+			//保存的上面的绘制的内容
+			ctx.translate(10,10);//移动画布
+			ctx.rotate(45*Math.PI/180)//旋转画布
+//			ctx.scale(2,2);//放大画布
+			ctx.globalAlpha=.3//全局透明度
+			
+//			ctx.moveTo(0,0);
+//			ctx.lineTo(400,0);
+//			ctx.moveTo(0,0);
+//			ctx.lineTo(0,400);
+			ctx.stroke();
+			ctx.fillRect(10,10,100,100);
+			ctx.restore();
+			//把上一次保存的ctx状态还原回来
+			ctx.fillRect(400,400,100,100)
+		</script>
+	</body>
+</html>

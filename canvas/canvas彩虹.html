@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<!--<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui">-->
+
+		<title></title>
+		<style type="text/css">
+			* {
+				margin: 0;
+				padding: 0;
+			}
+			
+			body {
+				background: #161635;
+			}
+			
+			.wrap {
+				position: relative;
+				width: 100%;
+				height: 100%;
+			}
+			
+			.wrap canvas {
+				position: absolute;
+				left: 0;
+				top: 0;
+			}
+			
+			#canvas {
+				z-index: 1;
+			}
+		</style>
+		<script src="./绘图-canvas/canvas类/Arc.js" type="text/javascript"></script>
+		<script src="./绘图-canvas/canvas类/Arrow.js" type="text/javascript"></script>
+		<script src="./绘图-canvas/canvas类/Tri.js" type="text/javascript"></script>
+	</head>
+
+	<body>
+		<div class="wrap">
+			<canvas id="canvas"></canvas>
+		</div>
+		<script type="text/javascript">
+			const canvas = document.getElementById('canvas');
+			const ctx = canvas.getContext('2d');
+			const W = window.innerWidth;
+			const H = window.innerHeight;
+
+			function setWH(ele) {
+				ele.width = W;
+				ele.height = H;
+			}
+
+			function scales(canvas, ctx) {
+				setWH(canvas)
+				var width = canvas.width,
+					height = canvas.height;
+				if(window.devicePixelRatio) {
+					canvas.style.width = width;
+					canvas.style.height = height;
+					canvas.height = height * window.devicePixelRatio;
+					canvas.width = width * window.devicePixelRatio;
+					ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+				}
+			}
+			scales(canvas, ctx);
+			let colors = [{
+				percent: 0,
+				color: '#0069ff'
+			}, {
+				percent: 0.2,
+				color: '#53b94d'
+			}, {
+				percent: 0.5,
+				color: '#e9ec15'
+			}, {
+				percent: 0.7,
+				color: '#eb8800'
+			}, {
+				percent: 1,
+				color: '#ff0000'
+			}];
+			//渐变色
+			var gradient = ctx.createLinearGradient(0, 0, W, 0);
+			let bgdColor = '#161635'; //背景色
+			for(let i = 0, len = colors.length; i < len; i++) {
+				gradient.addColorStop(colors[i]['percent'], colors[i]['color']);
+			};
+			//绘制全图的背景色
+			ctx.fillStyle = bgdColor;
+			ctx.fillRect(0, 0, W, H);
+			//绘制渐变圆环
+			var wArc = new Arc({
+				dx: W / 2,
+				dy: H,
+				r: W / 2,
+				lineWidth: 4,
+				strokeStyle: gradient,
+				startDeg: 180,
+				endDeg: 360
+			})
+			wArc.render(ctx);
+			//绘制阴影
+			ctx.shadowOffsetY = 15; // 阴影X轴偏移
+			ctx.shadowBlur = 14; // 模糊尺寸
+			ctx.shadowColor = 'rgba(0, 0, 0, 0.5)'; // 颜色
+			var shadow = new Arc({
+				dx: W / 2,
+					dy:H,
+					r: W / 2 - 36,
+					lineWidth: 25,
+					strokeStyle: '#fff',
+					startDeg:  180,
+					endDeg: 360
+			})
+			shadow.render(ctx)
+			ctx.shadowOffsetY = 0; // 阴影X轴偏移
+			ctx.shadowBlur = 0; // 模糊尺寸
+			
+			//绘制色块圆环
+			var mArcs = {};
+			
+			
+			
+			for(let i = 0, len = colors.length; i < len; i++) {
+				mArcs['mArc' + i] = new Arc({
+					dx: W / 2,
+					dy: H,
+					r: W / 2 - 36,
+					lineWidth: 25,
+					strokeStyle: colors[i].color,
+					startDeg: 36 * i + 180,
+					endDeg: 36 * (i + 1) + 180
+				});
+				mArcs['mArc' + i].render(ctx);
+
+			}
+
+			const MAX = 300;
+			const EVERY = 60;
+			let currentColor = '';
+
+			let values = 50;
+			colors.forEach((item, index) => {
+				if(values >= EVERY * index && values < EVERY * (index + 1)) {
+					currentColor = item.color
+					console.log(currentColor)
+				}
+			})
+			var arrow = new Arrow({
+				x: W / 2,
+				y: H,
+				len: 88,
+				w: 12,
+				h: 10,
+				startY: 120,
+				rotation: 90 + values * 180 / MAX,
+				lineColor: currentColor,
+				arrowcolor: currentColor,
+			});
+			arrow.render(ctx)
+
+			var tri = new Tri({
+				x: W / 2,
+				y: H,
+				w: 15,
+				h: 11,
+				startY: -W / 2 + 8,
+				rotation:-90 + values * 180 / MAX,
+				lineColor: currentColor,
+				arrowcolor: currentColor,
+			})
+			tri.render(ctx)
+		</script>
+	</body>
+
+</html>

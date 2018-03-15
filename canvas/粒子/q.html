@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="./particle.js" type="text/javascript">
+		</script>
+		<style type="text/css">
+			canvas{
+				background: #000;
+			}
+			
+			
+		</style>
+	</head>
+	<body>
+		<canvas id="canvas"></canvas>
+		<script type="text/javascript">
+			const canvas=document.getElementById('canvas');
+			const W=canvas.width=1000;
+			const H=canvas.height=600;
+			const ctx=canvas.getContext('2d');
+			let p=new Particle({
+				x:60,
+				y:H/2,
+				r:40,
+				fillStyle:"rgb(255,255,0)",
+				vx:1,
+				ax:1
+			});
+			let targetX=W/2,spring=0.01,f=0.95;
+			
+			;(function drawFrame(){
+				window.requestAnimationFrame(drawFrame);
+				ctx.clearRect(0,0,W,H);
+				
+				
+				if(p.x-p.r>W){
+					p.x=-p.r
+				}
+				
+				
+				p.x+=p.vx;
+				p.vx+=p.ax;
+				
+				
+				
+				
+				p.render(ctx)
+			})();
+			
+		</script>
+	</body>
+</html>

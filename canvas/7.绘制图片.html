@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<canvas id="canvas" width="500" height="500">jjj</canvas>
+		<script type="text/javascript">
+			var canvas=document.getElementById("canvas");
+			var ctx=canvas.getContext('2d');
+			
+			var img=new Image();
+			//图片只要设置了src属性，当前的img对象就会立即去加载图片
+			img.src='img/images.jpg';
+			//图片在加载完成之后执行的函数
+			img.onload=function (){
+				//图片加载完成后，把图片会知道canvas上
+				//拿到原图片的宽高
+				var ow=img.width;
+				var oh=img.height;
+				var w=400;var h=oh*w/ow;
+				ctx.drawImage(img,100,100,w,h);
+				//保持图片的宽高比
+			}
+			
+		</script>
+	</body>
+</html>

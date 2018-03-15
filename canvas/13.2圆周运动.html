@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<canvas id="canvas" width="800" height="600"></canvas>
+		<script type="text/javascript">
+			var canvas=document.getElementById("canvas");
+			var ctx=canvas.getContext('2d');
+			canvas.style.border="1px solid #000";
+			ctx.lineWidth=5;
+			ctx.strokeStyle='green';
+
+			var pos={
+				x:300,//设置虚线圆的中心点
+				y:300,
+				r1:100,//设置内虚线圆的半径
+				r2:180,//设置外虚线圆的半径
+				mes1:['es6','node','git','vue','jQuery','canvas'],//设置外虚线圆内的小圆的内容
+				mes2:['html5','css3','js']//内虚线圆内的小圆的内容
+			}
+			
+			class Ball{
+				constructor(br,fs,color,dotnum){
+					this.alpha=0;//小球的旋转角度
+					this.str='';//设置小球内的文字内容
+					this.r=br||22;//br设置运动小球的半径
+					this.fs=fs||12;//设置小球的文字大小
+					this.dotNum=dotnum||20;//设置小球轨迹线的虚线个数，最好能被360整除
+					this.color={
+						n1:rP([0,255]),
+						n2:rP([0,255]),
+						n3:rP([0,255]),
+						a:rP([5,8])
+					};
+					
+					
+				}
+				drawBall(r){
+					var x=(pos.x+Math.cos(this.alpha*Math.PI/180)*r);
+					var y=(pos.y-Math.sin(this.alpha*Math.PI/180)*r);
+					ctx.beginPath();
+					ctx.fillStyle=`rgba(${this.color.n1},${this.color.n2},${this.color.n3},${this.color.a/10})`;
+					ctx.arc(x,y,this.r,0,2*Math.PI);
+					ctx.fill();
+					ctx.beginPath();
+					ctx.font=`${this.fs}px`;
+					ctx.fillStyle='#fff';
+					ctx.textBaseline='top';
+					ctx.textAlign='center';
+					ctx.fillText(this.str,x,y-10);
+				}
+				Cricle(r){
+					for(var i=0;i<360/this.dotNum;i++){
+						ctx.beginPath();
+						ctx.strokeStyle='green';
+						ctx.arc(pos.x,pos.y,r,i*this.dotNum*Math.PI/180,(i*this.dotNum+this.dotNum/2)*Math.PI/180);
+						ctx.stroke();
+					}
+				}
+			}	
+			var store=[];
+			var n=0,m=0;
+			for(var i=0,len=pos.mes2.length;i<len;i++){
+				store[i]=new Ball();
+				store[i].str=pos.mes2[i];
+			}
+			var store0=[];
+			for(var i=0,len=pos.mes1.length;i<len;i++){
+				store0[i]=new Ball();
+				store0[i].str=pos.mes1[i];
+			}
+			
+			
+			function draw() {
+				n-=0.5;//控制内圆的运动速度
+				m+=0.3;//控制外圆的运动速度
+				for(var i=0,len=store.length;i<len;i++){
+					store[i].Cricle(pos.r1);
+					store[i].Cricle(pos.r2);
+				}
+				for(var i=0,len=store.length;i<len;i++){
+					store[i].alpha=360/len*i+n;
+					store[i].drawBall(pos.r1);
+				}
+				for(var i=0,len=store0.length;i<len;i++){
+					store0[i].alpha=360/len*i+m;
+					store0[i].drawBall(pos.r2);
+				}
+			}
+			var render=function() {
+				ctx.clearRect(0,0,canvas.width,canvas.height);
+				draw();
+				requestAnimationFrame(render);
+			}
+			function rP(arr){
+			  var max = Math.max.apply(this, arr);
+			  var min = Math.min.apply(this, arr);
+			  return Math.round(Math.random() * (max - min) + min);
+			}
+			
+			
+			render();
+		</script>
+	</body>
+</html>

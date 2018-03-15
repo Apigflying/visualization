@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			body{
+				margin:0;
+				padding:0;
+			}
+			canvas{
+				display:block;
+				background: #0b0a10;
+			}
+		</style>
+		<script src="js/jquery-3.2.0.js" type="text/javascript"></script>
+	</head>
+	<body>
+		<canvas id="canvas"></canvas>
+		<script type="text/javascript">
+			var canvas=document.getElementById("canvas");
+			var ctx=canvas.getContext('2d');
+			canvas.w=canvas.width=$(window).width();
+			canvas.h=canvas.height=$(window).height();
+			
+			var img=new Image();
+			img.src='img/logoText.png';
+			
+			img.onload=function (){
+				img.w=img.width/7;
+				img.h=img.height;
+				
+				ctx.drawImage(img,0,0,img.w,img.h,(canvas.w-img.w)/2,(canvas.h-img.h)/2,img.w,img.h);
+				
+				var data=ctx.getImageData((canvas.w-img.w)/2,(canvas.h-img.h)/2,img.w,img.h).data;
+				ctx.clearRect(0,0,canvas.w,canvas.h)
+				img.style.display='none';
+				var py=80;
+				var timer=setInterval(function (){
+					py-=8;
+					if(py<=0){
+						py=0;
+						clearInterval(timer);
+					}
+					saveMessage(data,py);
+				},1000/16)
+				setTimeout(function (){
+						var timer2=setInterval(function (){
+							py+=2;
+							if(py>=80){
+								py=80;
+								clearInterval(timer2);
+							}
+							saveMessage(data,py);
+						},1000/60)
+					},2000)
+			}
+			
+			
+			//保存粒子信息
+			function saveMessage(data,py){
+				var pos=0;//这个变量保存了像素是第几个
+				var datanew=[];
+				var imgpx=(canvas.w-img.w*2-py)/2;
+				var imgpy=(canvas.h-img.h*2-py)/2;
+				for(var i=1;i<=img.w;i++){
+					for(var j=1;j<img.h;j++){
+						//在这里i对应了每一行的坐标，j对应每一列的坐标
+						pos=((i-1)*img.w+(j-1))*4//(j-1)*img.w+(i-1)是第j列，第i行的那个像素，乘以4，就是这个像素在imageData中的R的值，那么pos+1就是G值，pos+2就是B值
+						var onepx={
+							x:imgpx+j+py*Math.random(),
+							y:imgpy+i+py*Math.random(),
+							color:`rgba(${data[pos]},${data[pos+1]},${data[pos+2]},${data[pos+3]})`
+						}
+						datanew.push(onepx);
+					}
+				}
+				setPx(datanew);
+			}
+			function setPx(datanew){
+				ctx.clearRect(0,0,canvas.w,canvas.h);
+				for(var i=0,len=datanew.length;i<len;i++){
+					ctx.beginPath();
+					ctx.fillStyle=datanew[i].color;
+					ctx.fillRect(datanew[i].x,datanew[i].y,1,1)
+				}
+			}
+		</script>
+	</body>
+</html>

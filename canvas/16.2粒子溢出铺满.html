@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			body{
+				margin:0;
+				padding:0;
+			}
+			canvas{
+				display:block;
+			}
+		</style>
+		<script src="js/jquery-3.2.0.js" type="text/javascript"></script>
+	</head>
+	<body>
+		<canvas id="canvas"></canvas>
+		<script type="text/javascript">
+			var canvas=document.getElementById("canvas");
+			var ctx=canvas.getContext('2d');
+			canvas.w=canvas.width=$(window).width();
+			canvas.h=canvas.height=$(window).height();
+			
+			var img=new Image();
+			img.src="img/images.jpg";
+			img.onload=function (){
+				img.w=img.width;
+				img.h=img.height;
+				ctx.drawImage(img,(canvas.w-img.w)/2,(canvas.h-img.h)/2,img.w,img.h);
+				var data=ctx.getImageData((canvas.w-img.w)/2,(canvas.h-img.h)/2,img.w,img.h).data;
+				ctx.clearRect(0,0,canvas.w,canvas.h)
+				img.style.display='none';
+			}
+			class MovParticle{
+				constructor(img,ix,iy){
+					var imgMes={
+						//储存原始图片信息
+						w:img.width,
+						h:img.height,
+						x:ix,
+						y:iy
+					}
+					var 
+				}
+				saveParticleMes(){
+					//保存所有的像素的颜色值和坐标值
+				}
+			}
+		</script>
+	</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<canvas id="canvas" width="500" height="500"></canvas>
+		<p>
+			用canvas画圆的命令：arc
+			画圆和画线的方式类似，
+				1.先设置线宽，线的样式
+				2.开启新路径
+				3.用ctx.arc画圆
+			arc的参数们
+			ctx.arc(100,100,70,0,130*Math.PI/180,true)	
+			前两个参数100,100 ：他们是圆弧中心的X轴和Y轴的坐标
+			70是圆弧的半径
+			
+			0是起始的角度
+			130*Math.PI/180是结束的角度
+			注：这里的角度是弧度数
+			
+			最后一个参数的buer值用来控制圆弧是否逆时针画圆
+			如果不传。默认是false。就是顺时针画圆，如果为true，那么就是逆时针，从0度开始，画到顺时针的130度处结束
+			为true和为false合集就是整个圆
+			
+		</p>
+		<script type="text/javascript">
+			var canvas=document.getElementById("canvas");
+			var ctx=canvas.getContext('2d');
+			
+//			//先设置圆的线宽
+//			ctx.lineWidth=5;
+//			//设置线的颜色
+////			ctx.strokeStyle='red';
+//			
+//			ctx.fillStyle='blue';
+//			ctx.beginPath();
+//			ctx.arc(100,100,70,0,Math.PI/180*130,true);
+//			//用stroke画线
+//			ctx.fill();
+			
+			
+			//绘制饼状图
+//			ctx.moveTo(200,200)
+//			ctx.fillStyle='red';
+//			ctx.arc(200,200,100,-90*Math.PI/180,-30*Math.PI/180)
+//			ctx.fill();
+//			ctx.beginPath();
+//			ctx.moveTo(200,200)
+//			ctx.fillStyle='blue';
+//			ctx.arc(200,200,100,Math.PI/180*(-30),Math.PI/180*90);
+//			ctx.fill();
+//			ctx.beginPath();
+//			ctx.moveTo(200,200);
+
+		//依据数据绘制饼状图
+		var data=[{
+			"value":.2,
+			"color":"red",
+			"title":"应届生"
+		},{
+			"value":.3,
+			"color":"blue",
+			"title":"社会招生"
+		},{
+			"value":.4,
+			"color":"green",
+			"title":"老学员推荐"
+		},{
+			"value":.1,
+			"color":"yellow",
+			"title":"公开课"
+		}]
+		
+		//起始角度
+		var tempAngle=-90*Math.PI/180; 
+		//起始圆心点
+		var x0=200,y0=200;
+		//半径
+		var r=100;
+		for (var i = 0; i < data.length; i++) {
+			//通过value值计算占比，也就是每个对象在圆中占的角度
+			var angle=data[i].value*360*Math.PI/180;
+			//因为颜色不同，要每次开启新路径
+			ctx.beginPath();
+			//设置填充的颜色
+			ctx.fillStyle=data[i].color;
+			//将弧的连接点移动到圆心位置
+			ctx.moveTo(200,200);
+			//结束点的弧度数是起始点的位置加上占比的弧度
+			var endAngle=tempAngle+angle;
+			//绘制圆
+			ctx.arc(x0,y0,r,tempAngle,endAngle);
+			//将下次for循环的起点移动到结束点的位置
+			tempAngle=endAngle;
+			ctx.fill();
+		}
+		
+		
+		
+		</script>
+	</body>
+</html>

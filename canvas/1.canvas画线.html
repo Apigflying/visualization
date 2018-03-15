@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>canvas画图</title>
+	</head>
+	<body>
+		<canvas id="cs" width="500" height="500"></canvas>
+		<script type="text/javascript">
+			var cs=document.getElementById("cs");
+			//要想操作canvas，要先拿到canvas的上下文
+			var ctx=cs.getContext('2d');
+			cs.style.border='1px solid red';
+			
+			//绘制直线，闭合路径，重行开始路径，绘制线宽，颜色，闭合路径，最后用stroke画线
+			ctx.beginPath();
+			ctx.lineWidth=1;
+			ctx.strokeStyle='red';
+			ctx.lineCap='round';//
+			ctx.moveTo(100,200);
+			ctx.lineTo(200,100)
+			ctx.lineTo(300,200);
+			ctx.closePath();
+			ctx.stroke();
+			
+		</script>
+	</body>
+</html>

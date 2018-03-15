@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<canvas id="canvas" width="500" height="500"></canvas>
+		<script type="text/javascript">
+			var canvas=document.getElementById("canvas");
+			var ctx=canvas.getContext('2d');
+			canvas.style.border='1px solid red';
+			//向下兼容处理
+			if(!window.requestAnimationFrame){
+				window.requestAnimationFrame=function(fn){
+					setTimeout(fn,1000/16);		
+				}
+			}
+			var store={};
+			function Ball(){
+				//随机生成x,y轴的坐标
+				this.x=Math.random()*canvas.width;
+				this.y=Math.random()*canvas.height;
+				this.moveX=Math.random();
+				this.r=5+5*Math.random();
+				this.color={
+					n1:rP([0,255]),
+					n2:rP([0,255]),
+					n3:rP([0,255])
+				};
+			}
+			Ball.prototype={
+				constructor:Ball,
+				draw:function(){
+					ctx.beginPath();
+					ctx.fillStyle=`rgb(${this.color.n1},${this.color.n2},${this.color.n3})`;
+					ctx.arc(this.x,this.y,this.r,0,2*Math.PI);
+					ctx.fill();
+				}
+			}
+			for (var index = 0; index < 10; index++) {
+				store[index]=new Ball();
+			}
+			function draw(){
+				console.log(store)
+				for(var index in store){
+					
+//					store[index].x+=store[index].moveX;
+//					store[index].y+=store[index].moveX;
+//					if(store[index].x>canvas.width){
+//						store[index].x=-2*store[index].r;
+//					}
+//					if(store[index].y>canvas.height){
+//						store[index].y=-2*store[index].r;
+//					}
+//					store[index].draw();
+				}
+			}
+			draw();
+			var rander=function (){
+				//每次都先清空，再渲染画布
+				ctx.clearRect(0,0,canvas.width,canvas.height);
+				draw();
+				//这个是让画布不断执行，是递归实现的
+				requestAnimationFrame(rander);
+			}
+//			rander();
+			function rP(arr){
+			  var max = Math.max.apply(this, arr);
+			  var min = Math.min.apply(this, arr);
+			  return Math.round(Math.random() * (max - min) + min);
+			}
+		</script>
+	</body>
+</html>

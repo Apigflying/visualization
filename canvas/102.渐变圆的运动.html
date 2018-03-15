@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>测试专用</title>
+  <style>
+  	ul,body{
+  		margin:0;
+  		padding:0;
+  	}
+  	li{
+  		list-style: none;
+  	}
+  	a{
+  		text-decoration: none;
+  	}
+  .box{
+  	width:200px;
+  	height:200px;
+  	/*position: absolute;*/
+  	background:#00A4FF;
+  }
+  </style>
+  <script type="text/javascript" src="js/jquery-3.2.0.js"></script>
+</head>
+<body>
+		<canvas id="canvas" width="1300" height="620"></canvas>
+	  <script type="text/javascript">
+	  	var canvas=document.getElementById("canvas");
+	  	var ctx=canvas.getContext('2d');
+	  	ctx.globalAlpha=0.8;
+	  	//每个canvas上的球都是一个实例
+	  	class Ball{
+	  		constructor(){
+	  			//位置随机
+	  			this.x=Math.random()*canvas.width;
+					this.y=Math.random()*canvas.height;
+					//增量
+	  			this.z=Math.random();
+	  			//旋转角度
+	  			this.rotate=rP([0,180]);
+	  			//半径10-20
+	  			this.r=60+50*Math.random();
+	  			this.color={
+						n1:rP([0,255]),
+						n2:rP([0,255]),
+						n3:rP([0,255])
+					};
+					this.rgbs=null;
+	  				
+	  		}
+	  		draw(){
+	  			ctx.beginPath();
+	  		this.rgbs=ctx.createLinearGradient(this.x-this.r*Math.cos(this.rotate*Math.PI/180),this.y-this.r*Math.sin(this.rotate*Math.PI/180),this.x+this.r*Math.cos(this.rotate*Math.PI/180),this.y+this.r*Math.sin(this.rotate*Math.PI/180));
+					this.rgbs.addColorStop(0,'#fff');
+					this.rgbs.addColorStop(1,`rgb(${this.color.n1},${this.color.n2},${this.color.n3})`);
+	  			ctx.fillStyle=this.rgbs;
+	  			ctx.arc(this.x,this.y,this.r,0,2*Math.PI);
+	  			ctx.closePath();
+	  			ctx.fill();
+	  			
+	  		}
+	  	}
+	  	//由于要创造多个实例，所以将这些实例挂在到对象上
+	  	var store={};
+	  	//给这个对象创建多个实例，这些实例作为对象，挂载在store下
+	  	for(let i=0;i<10;i++){
+	  		store[i]=new Ball();
+	  	}
+//	  	store[0]=new Ball();
+	  	//这个函数用来绘制每一次，Ball实例的状态
+	  	function draw(){
+	  		for(var index in store){
+	  			store[index].x++;
+	  			if(store[index].x>canvas.width){
+	  				store[index].x=0;
+	  				store[index].y=rP([100,canvas.height-100])
+	  			}
+	  			store[index].rotate+=1;
+	  			store[index].draw();
+	  		}
+	  	}
+	  	function rP(arr){
+			  var max = Math.max.apply(this, arr);
+			  var min = Math.min.apply(this, arr);
+			  return Math.round(Math.random() * (max - min) + min);
+			}
+	  	
+	  	
+//	  	draw();
+	  	//利用递归，先清除画板，然后绘图，然后执行自己，清除画板
+	  	var rander=function (){
+	  		ctx.clearRect(0,0,canvas.width,canvas.height);
+	  		draw();
+	  		requestAnimationFrame(rander);
+	  	}
+	  	rander();
+	  	
+	  </script>
+</body>
+</html>

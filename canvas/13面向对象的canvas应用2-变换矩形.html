@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<canvas id="canvas" width="500" height="500"></canvas>
+		<script type="text/javascript" src="xyCavs.js"></script>
+		<script type="text/javascript">
+			var canvas=document.getElementById("canvas");
+			var ctx=canvas.getContext('2d');
+			canvas.style.border='1px solid #000';
+			var ss=new RectStrokes({
+				x:100,
+				y:100,
+				w:200,
+				h:200,
+				rotation:10,
+				opacity:.6,
+				fillStyle:'yellow',
+				scaleX:1.5,
+				scaleY:1.5,
+				fillStyle:'purple',
+				strokeStyle:'green'
+			})
+			ss.render(ctx)
+		</script>
+	
+	
+	</body>
+</html>

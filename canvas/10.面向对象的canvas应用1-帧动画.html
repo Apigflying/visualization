@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<canvas id="canvas" width="500" height="500">jjj</canvas>
+		<div id="ctrl">
+			<input type="button" value="↓" />
+			<input type="button" value="←" />
+			<input type="button" value="→" />
+			<input type="button" value="↑" />
+		</div>
+		<script type="text/javascript" src="xyCavs.js"></script>
+		<script type="text/javascript">
+			var canvas=document.getElementById("canvas");
+			var ctx=canvas.getContext('2d');
+			var btns=document.getElementById("ctrl").children;
+			
+			//编写面向对象的思路：
+			//分析对象
+			/*
+			 *	1.这个对象有哪些属性：
+			 * 		width，height，imgsrc，speed，dir方向
+			 * 		这些是属性
+			 * 	2.这个对象有哪些行为：
+			 * 		渲染，改变方向
+			 * 		这些方法
+			 * 	3.封装一个类
+			 * */
+//			this.x=option.x===0?0:(option.x||10);//找到第一个为真
+//			this.y=option.y===0?0:(option.y||10);//后面的10就是默认值，当不传的时候，那么就是默认值，如果传了，那么就是传的值
+//			this.w=option.w||82.5;
+//			this.h=option.h||62.5;
+//			this.Sw=82.5;
+//			this.Sh=62.5;
+//			this.imgSrc=option.imgSrc||'';
+//			this.fps=option.fps||10//frame per second
+//			this.dirIndex=0;
+			var s=new FrameAnimation({
+				x:100,
+				y:100,
+				w:330,
+				h:250,
+				imgSrc:'img/逐帧动画.png',
+				fps:200
+			})
+			s.render(ctx);
+			for (let i = 0; i < btns.length; i++) {
+				btns[i].onclick=function (){
+					switch(i){
+						case 0:
+						s.changeDir(40);
+						break;
+						case 1:
+						s.changeDir(37);
+						break;
+						case 2:
+						s.changeDir(39);
+						break;
+						case 3:
+						s.changeDir(38);
+						break;
+					}
+				}
+			}
+			window.onkeydown=function(e){
+				s.changeDir(e.keyCode);
+			};
+		</script>
+	</body>
+</html>

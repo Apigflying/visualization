@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<canvas id="canvas" width="500" height="500">jjj</canvas>
+		<div id="ctrl">
+			<input type="button" value="↓" />
+			<input type="button" value="←" />
+			<input type="button" value="→" />
+			<input type="button" value="↑" />
+		</div>
+		<script type="text/javascript">
+			var canvas=document.getElementById("canvas");
+			var ctx=canvas.getContext('2d');
+			var img=new Image();
+			var btns=document.getElementById("ctrl").children;
+			var m=0;
+			img.src='img/逐帧动画.png';
+			
+			
+			
+			img.onload=function (){
+				var n=-1;
+				console.log(m)
+				setInterval(function (){
+					n++;
+					n%=4;
+					ctx.clearRect(100,100,165,125);
+					
+					ctx.drawImage(img,82.5*n,62.5*m,82.5,62.5,100,100,165,125)
+				},1000/10)
+				
+			}
+			for (let i = 0; i < btns.length; i++) {
+				btns[i].onclick=function (){
+					m=i;
+				}
+			}
+			window.onkeydown=function(e){
+				switch(e.keyCode){
+					case 37:
+					m=1;
+					break;
+					case 38:
+					m=3;
+					break;
+					case 39:
+					m=2;
+					break;
+					case 40:
+					m=0;
+					break;
+				}
+			};
+		</script>
+	</body>
+</html>

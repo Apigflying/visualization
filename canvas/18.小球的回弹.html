@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			body{
+				margin:0;
+				padding:0;
+			}
+			canvas{
+				display: block;
+			}
+		</style>
+		<script src="js/jquery-3.2.0.js" type="text/javascript">
+			
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas" width="" height=""></canvas>
+		<script type="text/javascript">
+			var canvas=document.getElementById("canvas");
+			var ctx=canvas.getContext('2d');
+			canvas.width=$(window).width();
+			canvas.height=$(window).height()-3;
+			
+			var ball={x:10,y:10,r:10,vx:0.2,vy:0,vg:0.3,color:'red'};
+			ctx.fillStyle='blue';
+			
+			function draw(){
+				ball.x+=ball.vx;
+				ball.y+=ball.vy;
+				ball.vy+=ball.vg;
+				if(ball.y>=canvas.height-ball.r){
+					ball.y=canvas.height-ball.r;
+					ball.vy=-ball.vy*0.8;
+				}
+				ctx.beginPath();
+				ctx.arc(ball.x,ball.y,ball.r,0,2*Math.PI);
+				ctx.fill();
+			}
+			
+			
+			
+			
+			function render(){
+				ctx.clearRect(0,0,canvas.width,canvas.height);
+				draw();
+				requestAnimationFrame(render);
+			}
+			render();
+			
+		</script>
+	</body>
+</html>

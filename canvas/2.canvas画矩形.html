@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		
+		
+		<p>
+			
+			ctx.beginPath()开启新路径
+			
+			ctx.lineCap=设置线帽的样式
+			ctx.strokeStyle=设置线的颜色
+			ctx.lineWidth=设置画线的线宽
+			
+			ctx.moveTo(起点X轴坐标，起点Y轴坐标)
+			ctx.lineTo(结束点的x轴的坐标，结束点的Y轴的坐标)
+			ctx.closePath()将路径自动闭合
+			
+			
+			ctx.fill()为图形填充颜色
+			ctx.stroke()将图形的边线绘制出来
+			
+			
+			ctx.strokeRect(参数同rect)绘制矩形
+			ctx.fillRect(参数同rect)绘制填充颜色的矩形
+			ctx.rect(起点X轴坐标，起点Y轴坐标，矩形的x轴边长，矩形的y轴边长)
+			
+			
+			
+		</p>
+		<canvas id="canvas" width="500" height="500"></canvas>
+		<script>
+			
+			var canvas=document.getElementById("canvas");
+			var xy=canvas.getContext('2d');
+			canvas.style.border='1px solid green';
+			
+			xy.lineCap='round';//在矩形中这个线帽无法使用
+			
+			xy.beginPath();
+			xy.strokeRect(100,100,270,50);//画矩形
+			//四个参数的意义：起点坐标（x轴，y轴的坐标），矩形的长和宽
+			
+			xy.rect(10,10,40,50);
+			//绘制矩形形状
+			//绘制
+			xy.stroke();
+			
+			
+			xy.beginPath();
+			//绘制一个填充颜色的矩形
+			xy.fillStyle='gold';
+			xy.fillRect(100,50,100,50);
+			
+		</script>
+	</body>
+</html>

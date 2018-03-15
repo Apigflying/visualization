@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/实例1，写字.css"/>
+		<style type="text/css">
+			#canvas{
+				display: block;
+				margin:0 auto;
+			}
+		</style>
+		<script src="js/jquery-3.2.0.js" type="text/javascript"></script>
+	</head>
+	<body>
+		<canvas id="canvas"></canvas>
+		<div id="controller" class="clear">
+			<div id="setColor">
+				<button class="red sc">red</button>
+				<button class="blue sc">blue</button>
+				<button class="yellow sc">yellow</button>
+			</div>
+			<input type="button" id="btn" value="清 除" />
+		</div>
+		<script type="text/javascript">
+			var canvas=document.getElementById("canvas");
+			var ctx=canvas.getContext('2d');
+			// 鼠标的抚摸事件即onmousemove是在onmousedown事件触发之后才能执行的
+			//这就会造成了move事件必须写在mousedown里面，所以这里用一个开关控制鼠标的状态
+			//这样就能让mousemove事件写在mousedown事件外
+			//从这里学到了一个规律。就是函数式编程的思想，尽量不要函数嵌套函数
+			//如果有函数嵌套函数的时候，可以定义一个变量，用来控制当前事件的子事件是否触发
+			var isMouseDown=false;
+			//这里保存了上一次笔画的位置信息
+			var lastLoc={
+				x:0,
+				y:0,
+				t:0
+			}
+			//设置mousemove时候的线宽
+			var olineWidth={
+				maxLW:20,
+				minLW:5,
+				maxV:5,
+				minV:0.1
+			}
+			
+			//设置canvas的宽度
+			//这里获取了新技能：
+			//在适配的时候，有时候有最小值，有时候有固定值，那么||就不好使了
+			//所以可以用Math.min()来判断什么时候最小
+			//这是移动端适配的套路之一
+			canvas.width=Math.min(600,$(window).width()-20);
+			canvas.height=canvas.width;
+			$('#controller').width(canvas.width);
+			drawGrid();//绘制米字格
+			//清除按钮的点击事件
+			$('#btn').on('click',function (){
+				ctx.clearRect(0,0,canvas.width,canvas.height);
+				drawGrid();
+			})
+			//选择颜色按钮
+			$('.sc').on('click',function (){
+				ctx.strokeStyle=$(this).html();
+			})
+			//将这部分提取出来，用来适配移动端
+			function beginStroke(point){
+				//当鼠标按下的时候，让这个这变为true
+				isMouseDown=true;
+				//记录鼠标按下的时候的位置坐标
+				//这个对象保存的就是canvas的起始点的坐标，moveTo
+				lastLoc=windowToCanvas(point.x,point.y,Date.now(),-1);
+			}
+			function moveStroke(point){
+				if(isMouseDown){
+					//记录当前鼠标移动的时候的坐标，也就是结束点的坐标lineTo
+					var curLoc=windowToCanvas(point.x,point.y,Date.now());
+					curLoc.w=setLineWidth(lastLoc,curLoc);
+					//设置线宽用的时间戳
+					//画线
+					drawLine(lastLoc,curLoc);
+					//让最后的变成当前的
+					lastLoc=curLoc;
+				}
+			}
+			
+			function endStroke(){
+				isMouseDown=false;
+			}
+			canvas.onmousedown=function(e){
+				e.preventDefault();
+				beginStroke({
+					x:e.pageX,
+					y:e.pageY
+				})
+				
+			};
+			canvas.addEventListener('touchstart',function(e){
+				e.preventDefault();
+				beginStroke({
+					x:e.touches[0].pageX,
+					y:e.touches[0].pageY
+				})
+			})
+			canvas.addEventListener('touchmove',function(e){
+				e.preventDefault();
+				moveStroke({
+					x:e.touches[0].pageX,
+					y:e.touches[0].pageY
+				})
+			})
+			canvas.addEventListener('touchend',function(e){
+				e.preventDefault();
+				endStroke();
+			})
+			canvas.onmousemove=function(e){
+				e.preventDefault();
+				moveStroke({
+					x:e.pageX,
+					y:e.pageY
+				})
+			};
+			canvas.onmouseout=function(e){
+				e.preventDefault();
+				//为了严谨性，这里将这个值设置为false。以防止鼠标移出canvas后，再回来，依旧能够继续写字
+				endStroke();
+			};
+			canvas.onmouseup=function(e){
+				e.preventDefault();
+				endStroke();
+			};
+			
+			//画线
+			function drawLine(l,c){
+				ctx.beginPath();
+				ctx.lineCap='round';
+				ctx.lineJoin='round';
+				ctx.lineWidth=c.w;
+				ctx.moveTo(l.x,l.y);
+				ctx.lineTo(c.x,c.y);
+				//利用两点之间距离的改变大小，设置线宽
+				//如果moveTo到lineTo的距离大，说明鼠标移动的快，那么对应的线宽就小，如果鼠标移动的慢，那么对应的线宽就大
+				ctx.stroke();
+			}
+			//设置线宽
+			function setLineWidth(l,c){
+				let t=(c.t-l.t);//获取两点之间运动的时间
+				//获取上一点到下一点之间的距离
+				let s=Math.sqrt((Math.pow(c.x-l.x,2)+Math.pow(c.y-l.y,2)),2);
+				
+				let v=s/t;
+				
+				let lineWidth=0;
+				if(v<=olineWidth.minV){
+					//设置最大值和最小值
+					lineWidth=olineWidth.maxLW;
+				}else if(v>=olineWidth.maxV){
+					lineWidth=olineWidth.minLW;
+				}else{
+					lineWidth=olineWidth.maxLW-(v-olineWidth.minV)/(olineWidth.minLW-olineWidth.minV)*(olineWidth.maxLW-olineWidth.minV);
+				}
+				//上面的代码会造成线条过度不平滑，即：当线条的绘制由30直接过度到1的时候，会造成瞬间变小。所以要记录上一次的线宽，然后进行平滑的过度
+				if(l.w===-1){
+					//如果是-1说明是第一次绘制
+					//那么直接返回当前的线宽即可
+					return lineWidth;
+				}
+				return l.w*(5/6)+lineWidth*(1/6);
+			}
+			
+			//设置米字格
+			function drawGrid(){
+				//为了不影响后续代码的样式，在这里保存当前状态，在最后恢复到以前的状态
+				ctx.save();
+				ctx.strokeStyle='red';
+			
+				ctx.beginPath();
+				ctx.lineWidth=6;
+				ctx.moveTo(3,3);
+				ctx.lineTo(canvas.width-3,3);
+				ctx.lineTo(canvas.width-3,canvas.height-3);
+				ctx.lineTo(3,canvas.height-3);
+				ctx.closePath();
+				ctx.stroke();
+				
+				ctx.beginPath();
+				ctx.lineWidth=1;
+				ctx.moveTo(canvas.width/2,0);
+				ctx.lineTo(canvas.width/2,canvas.height);
+				ctx.moveTo(0,canvas.height/2);
+				ctx.lineTo(canvas.width,canvas.height/2)
+				ctx.moveTo(0,0);
+				ctx.lineTo(canvas.width,canvas.height)
+				ctx.moveTo(0,canvas.height);
+				ctx.lineTo(canvas.width,0)
+				ctx.stroke();
+				//这样，在这个函数里面绘制的所有的状态都不会影响后面的代码
+				
+				ctx.beginPath();
+				ctx.strokeStyle='white';
+				ctx.lineWidth=10;
+				
+				for(let i=1;i<4;i++){
+					ctx.strokeRect(canvas.width*(i/8),canvas.height*(i/8),canvas.width*(1-2*(i/8)),canvas.height*(1-2*(i/8)))
+				}
+				ctx.restore();
+			}
+			//利用函数生成对象，返回鼠标在canvas上mousemove的时候的信息
+			function windowToCanvas(x,y,t,w){
+				var bbox=canvas.getBoundingClientRect();
+				return {
+					x:Math.round(x-bbox.left),
+					y:Math.round(y-bbox.top),
+					t:Date.now(),
+					w:-1
+				};
+			};
+		</script>
+	</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			body{
+				margin:0;
+				padding:0;
+			}
+		</style>
+		<script src="js/jquery-3.2.0.js" type="text/javascript"></script>
+	</head>
+	<body>
+		<canvas id="canvas"></canvas>
+		<script type="text/javascript">
+			var canvas=document.getElementById("canvas");
+			var ctx=canvas.getContext('2d');
+			canvas.width=$(window).width();
+			canvas.height=$(window).height();
+			
+			class Follow{
+				constructor(){
+					this.x=200;
+					this.y-200;
+					this.r=10;
+					this.drawing();
+				}
+				drawing(){
+					ctx.beginPath();
+					ctx.fillStyle='red';
+					ctx.arc(this.x,this.y,this.r,0,2*Math.PI);
+					ctx.fill();
+				}
+			}
+			
+			var store=[];
+			
+//			for(var i=0;i<20;i++){
+//				store[i]=new Follow();
+//			}
+			store[0]=new Follow();
+			$(document).on('mousemove',function (e){
+				ctx.clearRect(0,0,canvas.width,canvas.height)
+				draw(e.pageX,e.pageY)
+				
+			})
+			function draw(x=100,y=100){
+				store[0].x=x;
+				store[0].y=y;
+				store[0].drawing();
+			}
+			var render=function (){
+				ctx.clearRect(0,0,canvas.width,canvas.height)
+				draw();
+				requestAnimationFrame(render);
+			} 
+			
+			
+		</script>
+	</body>
+</html>
